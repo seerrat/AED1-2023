@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_N 1000
+#define INF 1000000
+
+typedef struct {
+    int cidade;
+    int distancia;
+} Node;
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+int BFS(int N, int M, int grafo[MAX_N][MAX_N], int C, int R, int E) {
+    bool visitado[MAX_N] = { false };
+    Node fila[MAX_N];
+    int frente = 0, tras = 0;
+
+    fila[tras].cidade = C;
+    fila[tras].distancia = 0;
+    tras++;
+
+    visitado[C] = true;
+
+    while (frente < tras) {
+        Node atual = fila[frente];
+        frente++;
+
+        if (atual.cidade == R)
+            return atual.distancia;
+
+        for (int i = 1; i <= N; i++) {
+            if (i != E && grafo[atual.cidade][i] != INF && !visitado[i]) {
+                fila[tras].cidade = i;
+                fila[tras].distancia = atual.distancia + 1;
+                tras++;
+                visitado[i] = true;
+            }
+        }
+    }
+
+    return -1; // Caso não seja possível chegar a R sem passar por E
+}
+
+int main() {
+    int N, M;
+
+    while (scanf("%d %d", &N, &M) == 2) {
+        int grafo[MAX_N][MAX_N];
+
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                grafo[i][j] = (i == j) ? 0 : INF;
+            }
+        }
+
+        for (int i = 0; i < M; i++) {
+            int A, B;
+            scanf("%d %d", &A, &B);
+            grafo[A][B] = grafo[B][A] = 1;
+        }
+
+        int C, R, E;
+        scanf("%d %d %d", &C, &R, &E);
+
+        int menorTempo = BFS(N, M, grafo, C, R, E);
+
+        printf("%d\n", menorTempo);
+    }
+
+    return 0;
+}
