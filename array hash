@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    int N;
+    scanf("%d", &N);
+
+    for (int i = 0; i < N; i++) {
+        int L;
+        scanf("%d", &L);
+        int result = 0;
+
+        for (int j = 0; j < L; j++) {
+            char lines[100];
+            scanf("%s", lines);
+
+            for (int z = 0; z < strlen(lines); z++) {
+                int alPos = (int) lines[z] - 65;
+                result += alPos + j + z;
+            }
+        }
+
+        printf("%d\n", result);
+    }
+
+    return 0;
+}
