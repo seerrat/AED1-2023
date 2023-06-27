@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no {
+    int valor;
+    struct no* esquerda;
+    struct no* direita;
+} No;
+
+No* criarNo(int valor) {
+    No* novoNo = (No*)malloc(sizeof(No));
+    novoNo->valor = valor;
+    novoNo->esquerda = NULL;
+    novoNo->direita = NULL;
+    return novoNo;
+}
+
+No* inserir(No* raiz, int valor) {
+    if (raiz == NULL) {
+        return criarNo(valor);
+    }
+
+    if (valor < raiz->valor) {
+        raiz->esquerda = inserir(raiz->esquerda, valor);
+    } else if (valor > raiz->valor) {
+        raiz->direita = inserir(raiz->direita, valor);
+    }
+
+    return raiz;
+}
+
+void percursoInfixo(No* raiz) {
+    if (raiz != NULL) {
+        percursoInfixo(raiz->esquerda);
+        printf("%d ", raiz->valor);
+        percursoInfixo(raiz->direita);
+    }
+}
+
+void percursoPrefixo(No* raiz) {
+    if (raiz != NULL) {
+        printf("%d ", raiz->valor);
+        percursoPrefixo(raiz->esquerda);
+        percursoPrefixo(raiz->direita);
+    }
+}
+
+void percursoPosfixo(No* raiz) {
+    if (raiz != NULL) {
+        percursoPosfixo(raiz->esquerda);
+        percursoPosfixo(raiz->direita);
+        printf("%d ", raiz->valor);
+    }
+}
+
+No* pesquisar(No* raiz, int valor) {
+    if (raiz == NULL || raiz->valor == valor) {
+        return raiz;
+    }
+
+    if (valor < raiz->valor) {
+        return pesquisar(raiz->esquerda, valor);
+    } else {
+        return pesquisar(raiz->direita, valor);
+    }
+}
+
+int main() {
+    No* raiz = NULL;
+    int valor;
+    char comando[10];
+
+    while (scanf("%s", comando) != EOF) {
+        if (comando[0] == 'I') {
+            scanf("%d", &valor);
+            raiz = inserir(raiz, valor);
+        } else if (comando[0] == 'I') {
+            percursoInfixo(raiz);
+            printf("\n");
+        } else if (comando[0] == 'P') {
+            scanf("%d", &valor);
+            No* resultado = pesquisar(raiz, valor);
+            if (resultado == NULL) {
+                printf("%d nao existe\n", valor);
+            } else {
+                printf("%d existe\n", valor);
+            }
+        }
+    }
+
+    return 0;
+}
