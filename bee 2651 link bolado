@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char name[100001];
+    scanf("%s", name);
+    int len = strlen(name);
+    
+    // Converter o nome para letras minúsculas para facilitar a comparação
+    for (int i = 0; i < len; i++) {
+        name[i] = tolower(name[i]);
+    }
+    
+    // Verificar se o nome contém o trecho "zelda"
+    if (strstr(name, "zelda") != NULL) {
+        printf("Link Bolado\n");
+    } else {
+        printf("Link Tranquilo\n");
+    }
+    
+    return 0;
+}
