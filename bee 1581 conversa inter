@@ -1,0 +1,29 @@
+#include <string.h>
+#include <stdio.h>
+
+int main() {
+    int casos, k, mesmoIdioma;
+    char idioma[21], s[21];
+
+    scanf("%d", &casos);
+
+    for (int i = 0; i < casos; ++i) {
+        scanf("%d\n", &k);
+
+        mesmoIdioma = 1;
+        scanf("%s\n", idioma);
+        for (int j = 1; j < k; ++j) {
+            scanf("%s\n", s);
+
+            if (strcmp(idioma, s))
+                mesmoIdioma = 0;
+        }
+
+        if (mesmoIdioma)
+            printf("%s\n", idioma);
+        else
+            printf("ingles\n");
+    }
+
+    return 0;
+}
