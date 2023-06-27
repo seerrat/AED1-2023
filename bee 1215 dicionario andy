@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
+
+typedef struct {
+    char palavra[201];
+} String;
+
+bool buscaString(const char *str, String *dicionario, unsigned tamanho);
+void ordenaAlfabeticamente(String *dicionario, int tamanho);
+void quickSortInterno(String *dicionario, int inicio, int fim);
+
+int main() {
+    unsigned i, j, k = 0;
+    char tempEntrada[201], tempSaida[201];
+    String dicionario[5050];
+
+    memset(dicionario, 0, sizeof(dicionario));
+    
+    while (scanf(" %[^\n]", tempEntrada) != EOF) {
+        i = j = 0;
+        
+        while (tempEntrada[i]) {
+            while (isalpha(tempEntrada[i]))
+                tempSaida[j++] = tolower(tempEntrada[i++]);
+            
+            if (tempEntrada[i] == '\0') {
+                tempSaida[j] = '\0';
+                
+                if (!buscaString(tempSaida, dicionario, k))
+                    strcpy(dicionario[k++].palavra, tempSaida);
+                
+                j = 0;
+                memset(tempSaida, 0, sizeof(tempSaida));
+                break;
+            }
+            
+            tempSaida[j] = '\0';
+            
+            while (!isalpha(tempEntrada[i])) {
+                i++;
+                
+                if (tempEntrada[i] == '\0')
+                    break;
+            }
+            
+            if (!buscaString(tempSaida, dicionario, k))
+                strcpy(dicionario[k++].palavra, tempSaida);
+            
+            j = 0;
+            memset(tempSaida, 0, sizeof(tempSaida));
+        }
+        
+        memset(tempEntrada, 0, sizeof(tempEntrada));
+    }
+    
+    ordenaAlfabeticamente(dicionario, k);
+    
+    j = 0;
+    if (strcmp(dicionario[0].palavra, "\0") == 0)
+        j = 1;
+    
+    for (; j < k; j++)
+        printf("%s\n", dicionario[j].palavra);
+    
+    return 0;
+}
+
+bool buscaString(const char *str, String *dicionario, unsigned tamanho) {
+    unsigned i;
+    
+    for (i = 0; i < tamanho; i++) {
+        if (strcmp(dicionario[i].palavra, str) == 0)
+            return true;
+    }
+    
+    return false;
+}
+
+void ordenaAlfabeticamente(String *dicionario, int tamanho) {
+    quickSortInterno(dicionario, 0, tamanho - 1);
+}
+
+void quickSortInterno(String *dicionario, int inicio, int fim) {
+    String pivo, temp;
+    int i, j;
+    
+    if (fim - inicio > 0) {
+        if (inicio < fim) {
+            i = inicio;
+            j = fim;
+            pivo = dicionario[(i + j) / 2];
+            
+            do {
+                while (strcmp(dicionario[i].palavra, pivo.palavra) < 0)
+                    i++;
+                while (strcmp(dicionario[j].palavra, pivo.palavra) > 0)
+                    j--;
+                
+                if (i <= j) {
+                    temp = dicionario[i];
+                    dicionario[i] = dicionario[j];
+                    dicionario[j] = temp;
+                    i++; j--;
+                }
+            } while (i <= j);
+            
+            quickSortInterno(dicionario, inicio, j);
+            quickSortInterno(dicionario, i, fim);
+        }
+    }
+}
