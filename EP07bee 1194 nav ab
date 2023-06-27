@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    char data;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* createNode(char data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+int searchIndex(char arr[], int start, int end, char value) {
+    int i;
+    for (i = start; i <= end; i++) {
+        if (arr[i] == value)
+            return i;
+    }
+    return -1;
+}
+
+Node* buildTree(char inOrder[], char preOrder[], int inStart, int inEnd) {
+    static int preIndex = 0;
+
+    if (inStart > inEnd)
+        return NULL;
+
+    Node* newNode = createNode(preOrder[preIndex++]);
+
+    if (inStart == inEnd)
+        return newNode;
+
+    int inIndex = searchIndex(inOrder, inStart, inEnd, newNode->data);
+
+    newNode->left = buildTree(inOrder, preOrder, inStart, inIndex - 1);
+    newNode->right = buildTree(inOrder, preOrder, inIndex + 1, inEnd);
+
+    return newNode;
+}
+
+void postOrder(Node* node) {
+    if (node == NULL)
+        return;
+
+    postOrder(node->left);
+    postOrder(node->right);
+    printf("%c", node->data);
+}
+
+void freeTree(Node* node) {
+    if (node == NULL)
+        return;
+
+    freeTree(node->left);
+    freeTree(node->right);
+    free(node);
+}
+
+int main() {
+    int C;
+    scanf("%d", &C);
+
+    while (C > 0) {
+        int N;
+        char preOrder[53];
+        char inOrder[53];
+
+        scanf("%d %s %s", &N, preOrder, inOrder);
+
+        Node* root = buildTree(inOrder, preOrder, 0, N - 1);
+
+        postOrder(root);
+        printf("\n");
+
+        freeTree(root);
+
+        C--;
+    }
+
+    return 0;
+}
