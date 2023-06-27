@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_N 100
+#define MAX_LENGTH 20
+
+int main() {
+    int n, k;
+    char nomes[MAX_N][MAX_LENGTH + 1]; // +1 para armazenar o caractere nulo
+    char nome_vencedor[MAX_LENGTH + 1]; // +1 para armazenar o caractere nulo
+
+    scanf("%d %d", &n, &k);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%s", nomes[i]);
+    }
+
+    // Ordena a lista de nomes em ordem alfabética
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (strcmp(nomes[i], nomes[j]) > 0) {
+                char temp[MAX_LENGTH + 1];
+                strcpy(temp, nomes[i]);
+                strcpy(nomes[i], nomes[j]);
+                strcpy(nomes[j], temp);
+            }
+        }
+    }
+
+    // Define o nome do aluno vencedor
+    strcpy(nome_vencedor, nomes[k-1]);
+
+    printf("%s\n", nome_vencedor);
+
+    return 0;
+}
